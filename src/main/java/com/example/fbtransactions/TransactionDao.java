@@ -1,10 +1,13 @@
 package com.example.fbtransactions;
 
+import org.springframework.stereotype.Repository;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class TransactionDao {
     private final Connection connection;
 

@@ -11,7 +11,11 @@ import java.util.List;
 
 @Controller
 public class TransactionController {
-    private static final TransactionDao DAO = new TransactionDao();
+    private final TransactionDao dao;
+
+    public TransactionController(TransactionDao dao) {
+        this.dao = dao;
+    }
 
     @GetMapping("/")
     public String home(Model model) {
@@ -21,21 +25,21 @@ public class TransactionController {
 
     @PostMapping("/add")
     public String add(Transaction transaction) {
-        DAO.save(transaction);
+        dao.save(transaction);
         return "redirect:/";
     }
 
     @GetMapping("/list")
     public String list(TransactionType type, Model model) {
-        List<Transaction> transactions = DAO.findByType(type);
+        List<Transaction> transactions = dao.findByType(type);
         model.addAttribute("transactions", transactions);
         return "list";
     }
 
     @GetMapping("/edit")
     public String editForm(@RequestParam int id, Model model) {
-        if (DAO.findById(id).isPresent()) {
-            Transaction transaction = DAO.findById(id).get();
+        if (dao.findById(id).isPresent()) {
+            Transaction transaction = dao.findById(id).get();
             model.addAttribute("transaction", transaction);
             return "edit";
         }
@@ -44,14 +48,14 @@ public class TransactionController {
 
     @PostMapping("/edit")
     public String edit(Transaction transaction) {
-        DAO.update(transaction);
+        dao.update(transaction);
         return "redirect:/";
     }
 
     @GetMapping("/delete")
     public String deleteForm(@RequestParam int id, Model model) {
-        if (DAO.findById(id).isPresent()) {
-            Transaction transaction = DAO.findById(id).get();
+        if (dao.findById(id).isPresent()) {
+            Transaction transaction = dao.findById(id).get();
             model.addAttribute("transaction", transaction);
             return "delete";
         }
@@ -60,7 +64,7 @@ public class TransactionController {
 
     @PostMapping("/delete")
     public String delete(Transaction transaction) {
-        DAO.delete(transaction.getId());
+        dao.delete(transaction.getId());
         return "redirect:/";
     }
 }
